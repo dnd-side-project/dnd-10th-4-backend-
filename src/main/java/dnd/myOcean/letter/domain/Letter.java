@@ -83,6 +83,7 @@ public class Letter extends BaseEntity {
                                       final LetterTag letterTag, final LetterImage sendletterImage, final String uuid) {
         return Letter.builder()
                 .sender(sender)
+                .letterType("Normal")
                 .content(content)
                 .receiver(receiver)
                 .worryType(worryType)
@@ -111,6 +112,21 @@ public class Letter extends BaseEntity {
                 .build();
     }
 
+    public static Letter createSpecialLetter(final Member sender, final Member receiver,
+                                             final LetterImage sendletterImage,
+                                             final String content) {
+        return Letter.builder()
+                .sender(sender)
+                .letterType("Special")
+                .content(content)
+                .receiver(receiver)
+                .sendletterImage(sendletterImage)
+                .isDeleteBySender(false)
+                .hasReplied(false)
+                .isStored(false)
+                .build();
+    }
+
     public void deleteBySender() {
         this.isDeleteBySender = true;
     }
@@ -128,5 +144,9 @@ public class Letter extends BaseEntity {
 
     public void updateReceiver(final Member receiver) {
         this.receiver = receiver;
+    }
+
+    public boolean isNormalLetter() {
+        return this.letterType.equals("Normal");
     }
 }
