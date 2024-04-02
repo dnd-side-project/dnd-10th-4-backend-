@@ -106,7 +106,7 @@ public class Letter extends BaseEntity {
                 .receiver(receiver)
                 .sendletterImage(sendletterImage)
                 .isDeleteBySender(false)
-                .hasReplied(true)
+                .hasReplied(false)
                 .isStored(false)
                 .build();
     }

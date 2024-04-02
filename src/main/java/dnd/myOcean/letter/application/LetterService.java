@@ -176,7 +176,7 @@ public class LetterService {
         }
         return null;
     }
-    
+
     private void uploadImageToBucket(MultipartFile image, LetterImage letterImage) throws IOException {
         String imagePath = fileService.uploadImage(image, letterImage.getUniqueName());
         letterImage.updateImagePath(imagePath);
@@ -301,7 +301,7 @@ public class LetterService {
 
     @Transactional
     public void deleteStoredLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredTrue(letterId,
+        Letter letter = letterRepository.findByIdAndSenderIdAndStoredTrue(letterId,
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
