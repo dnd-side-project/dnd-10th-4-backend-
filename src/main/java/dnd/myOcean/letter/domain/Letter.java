@@ -145,6 +145,10 @@ public class Letter extends BaseEntity {
         this.receiver = receiver;
     }
 
+    public void updateSender(final Member sender) {
+        this.sender = sender;
+    }
+
     public boolean isNormalLetter() {
         return this.letterType.equals("Normal");
     }

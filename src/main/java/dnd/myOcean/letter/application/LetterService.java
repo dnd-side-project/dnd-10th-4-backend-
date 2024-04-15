@@ -290,6 +290,16 @@ public class LetterService {
     }
 
     @Transactional
+    public void deleteRepliedLetter(final CurrentMemberIdRequest request, final Long letterId) {
+        Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(
+                        letterId,
+                        request.getMemberId())
+                .orElseThrow(AccessDeniedLetterException::new);
+
+        letterRepository.delete(letter);
+    }
+
+    @Transactional
     public void storeRepliedLetter(final CurrentMemberIdRequest request, final Long letterId) {
         Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(
                         letterId,

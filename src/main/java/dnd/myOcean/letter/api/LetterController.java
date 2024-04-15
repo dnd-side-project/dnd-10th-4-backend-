@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -110,6 +111,14 @@ public class LetterController {
     public ResponseEntity<RepliedLetterResponse> readRepliedLetter(CurrentMemberIdRequest request,
                                                                    @PathVariable("letterId") Long letterId) {
         return new ResponseEntity<>(letterService.readRepliedLetter(request, letterId), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/reply/{letterId}")
+    @AssignCurrentMemberId
+    public ResponseEntity<Void> deleteRepliedLetter(CurrentMemberIdRequest request,
+                                                    @PathVariable("letterId") Long letterId) {
+        letterService.deleteRepliedLetter(request, letterId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PatchMapping("/reply/storage/{letterId}")
