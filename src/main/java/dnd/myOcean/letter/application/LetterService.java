@@ -315,6 +315,8 @@ public class LetterService {
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
+        System.out.println(letter.getId());
+
         if (letter.isNormalLetter()) {
             letter.store(false);
             return;
