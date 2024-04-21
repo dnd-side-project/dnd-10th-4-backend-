@@ -74,6 +74,8 @@ public class AuthService {
 
         saveRefreshTokenOnRedis(member, tokenResponse);
 
+        System.out.println(token);
+
         if (member.isFirstLogin()) {
             Member rootMember = memberRepository.findRootUser().orElseThrow(MemberNotFoundException::new);
             LetterImage letterImage = letterImageRepository.findOnboardingLetter()
