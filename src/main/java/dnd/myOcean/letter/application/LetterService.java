@@ -311,7 +311,7 @@ public class LetterService {
 
     @Transactional
     public void deleteStoredLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndStoredTrue(letterId,
+        Letter letter = letterRepository.findStoredLetter(letterId,
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
