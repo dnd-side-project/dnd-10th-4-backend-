@@ -315,7 +315,12 @@ public class LetterService {
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
-        letter.store(false);
+        if (letter.isNormalLetter()) {
+            letter.store(false);
+            return;
+        }
+
+        letterRepository.delete(letter);
     }
 
     public PagedStoredLetterResponse readStoredLetters(final LetterReadCondition cond) {

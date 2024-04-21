@@ -34,7 +34,6 @@ public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQue
     Optional<Letter> findByIdAndReceiverId(@Param("id") Long id,
                                            @Param("receiverId") Long receiverId);
 
-
     @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.isStored = false"
             + " AND l.letterType = 'Onboarding'")
     Optional<Letter> findByIdAndReceiverIdAndOnboardingLetter(@Param("id") Long id,
