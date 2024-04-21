@@ -12,6 +12,7 @@ import dnd.myOcean.letter.domain.dto.response.SendLetterResponse;
 import dnd.myOcean.letter.domain.dto.response.StoredLetterResponse;
 import dnd.myOcean.letter.repository.infra.querydsl.dto.LetterReadCondition;
 import dnd.myOcean.letterimage.domain.QLetterImage;
+import java.util.Comparator;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -34,7 +35,7 @@ public class LetterQuerydslRepositoryImpl extends QuerydslRepositorySupport impl
     }
 
     @Override
-    public Page<SendLetterResponse> findAllSendLetter(LetterReadCondition cond) {
+    public Page<SendLetterResponse> findAllPagedSendLetter(LetterReadCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
         Predicate predicate = createPredicateByCurrentMemberSend(cond);
         List<SendLetterResponse> sendLetterResponses = fetchAllSendLetter(predicate, pageable);
@@ -47,6 +48,7 @@ public class LetterQuerydslRepositoryImpl extends QuerydslRepositorySupport impl
                 .stream()
                 .collect(Collectors.toList());
 
+        distinctSendLetterResponses.sort(Comparator.comparing(SendLetterResponse::getCreatedAt));
         return new PageImpl<>(distinctSendLetterResponses, pageable, fetchCount(predicate));
     }
 
@@ -80,7 +82,7 @@ public class LetterQuerydslRepositoryImpl extends QuerydslRepositorySupport impl
     }
 
     @Override
-    public Page<StoredLetterResponse> findAllStoredLetter(LetterReadCondition cond) {
+    public Page<StoredLetterResponse> findAllPagedStoredLetter(LetterReadCondition cond) {
         Pageable pageable = PageRequest.of(cond.getPage(), cond.getSize());
         Predicate predicate = createPredicateByCurrentMemberStored(cond);
         return new PageImpl<>(fetchAllStoredLetter(predicate, pageable), pageable, fetchCount(predicate));

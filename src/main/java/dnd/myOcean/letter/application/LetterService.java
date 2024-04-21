@@ -187,14 +187,14 @@ public class LetterService {
     }
 
     public SendLetterResponse readSendLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndIsDeleteBySenderFalse(letterId, request.getMemberId())
+        Letter letter = letterRepository.findSendLetter(letterId, request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
         return SendLetterResponse.toDto(letter);
     }
 
     @Transactional
     public void deleteSendLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderId(letterId, request.getMemberId())
+        Letter letter = letterRepository.findSendLetter(letterId, request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
         List<Letter> sendLetters = letterRepository.findAllByUuid(letter.getUuid());
@@ -202,17 +202,17 @@ public class LetterService {
     }
 
     public PagedSendLettersResponse readSendLetters(final LetterReadCondition cond) {
-        return PagedSendLettersResponse.of(letterRepository.findAllSendLetter(cond));
+        return PagedSendLettersResponse.of(letterRepository.findAllPagedSendLetter(cond));
     }
 
     public ReceivedLetterResponse readReceivedLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndReceiverIdAndHasRepliedIsFalse(letterId, request.getMemberId())
+        Letter letter = letterRepository.findReceivedLetter(letterId, request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
         return ReceivedLetterResponse.toDto(letter);
     }
 
     public List<ReceivedLetterResponse> readReceivedLetters(final CurrentMemberIdRequest request) {
-        List<Letter> letters = letterRepository.findAllByReceiverIdAndHasRepliedFalseAndStoredFalse(
+        List<Letter> letters = letterRepository.findAllReceivedLetters(
                 request.getMemberId());
 
         return letters.stream()
@@ -276,13 +276,13 @@ public class LetterService {
 
     public List<RepliedLetterResponse> readRepliedLetters(final CurrentMemberIdRequest request) {
         return RepliedLetterResponse.toDtoList(
-                letterRepository.findAllBySenderIdAndHasRepliedTrueAndStoredFalse(request.getMemberId())
+                letterRepository.findAllRepliedLetter(request.getMemberId())
         );
     }
 
     @Transactional
     public RepliedLetterResponse readRepliedLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(
+        Letter letter = letterRepository.findRepliedLetter(
                         letterId,
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
@@ -291,17 +291,17 @@ public class LetterService {
 
     @Transactional
     public void deleteRepliedLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(
+        Letter letter = letterRepository.findRepliedLetter(
                         letterId,
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
 
-        letterRepository.delete(letter);
+        letter.deleteRepliedLetter();
     }
 
     @Transactional
     public void storeRepliedLetter(final CurrentMemberIdRequest request, final Long letterId) {
-        Letter letter = letterRepository.findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(
+        Letter letter = letterRepository.findRepliedLetter(
                         letterId,
                         request.getMemberId())
                 .orElseThrow(AccessDeniedLetterException::new);
@@ -319,7 +319,7 @@ public class LetterService {
     }
 
     public PagedStoredLetterResponse readStoredLetters(final LetterReadCondition cond) {
-        return PagedStoredLetterResponse.of(letterRepository.findAllStoredLetter(cond));
+        return PagedStoredLetterResponse.of(letterRepository.findAllPagedStoredLetter(cond));
     }
 
     @Transactional

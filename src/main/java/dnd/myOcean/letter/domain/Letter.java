@@ -71,6 +71,7 @@ public class Letter extends BaseEntity {
     private String uuid;
 
     private boolean isDeleteBySender;
+    private boolean isDeleteByReceiver;
 
     private boolean hasReplied;
     private LocalDateTime repliedDate;
@@ -91,6 +92,7 @@ public class Letter extends BaseEntity {
                 .sendletterImage(sendletterImage)
                 .uuid(uuid)
                 .isDeleteBySender(false)
+                .isDeleteByReceiver(false)
                 .hasReplied(false)
                 .isStored(false)
                 .build();
@@ -106,6 +108,7 @@ public class Letter extends BaseEntity {
                 .receiver(receiver)
                 .sendletterImage(sendletterImage)
                 .isDeleteBySender(false)
+                .isDeleteByReceiver(false)
                 .hasReplied(false)
                 .isStored(false)
                 .build();
@@ -121,6 +124,7 @@ public class Letter extends BaseEntity {
                 .receiver(receiver)
                 .sendletterImage(sendletterImage)
                 .isDeleteBySender(false)
+                .isDeleteByReceiver(false)
                 .hasReplied(false)
                 .isStored(false)
                 .build();
@@ -139,14 +143,18 @@ public class Letter extends BaseEntity {
 
     public void store(final boolean isStored) {
         this.isStored = isStored;
+
+        if (isStored == false) {
+            this.isDeleteByReceiver = true;
+        }
+    }
+
+    public void deleteRepliedLetter() {
+        this.isDeleteBySender = true;
     }
 
     public void updateReceiver(final Member receiver) {
         this.receiver = receiver;
-    }
-
-    public void updateSender(final Member sender) {
-        this.sender = sender;
     }
 
     public boolean isNormalLetter() {

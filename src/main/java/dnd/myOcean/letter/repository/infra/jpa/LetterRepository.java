@@ -12,28 +12,28 @@ import org.springframework.data.repository.query.Param;
 
 public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQuerydslRepository {
 
+    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false")
+    Optional<Letter> findReceivedLetter(@Param("id") Long id,
+                                        @Param("receiverId") Long receiverId);
+
     @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false")
-    List<Letter> findAllByReceiverIdAndHasRepliedFalseAndStoredFalse(@Param("receiverId") Long receiverId);
+    List<Letter> findAllReceivedLetters(@Param("receiverId") Long receiverId);
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.sender sr WHERE sr.id = :senderId AND l.hasReplied = true AND l.isStored = false")
-    List<Letter> findAllBySenderIdAndHasRepliedTrueAndStoredFalse(@Param("senderId") Long senderId);
+    @Query("SELECT l FROM Letter l JOIN FETCH l.sender ls WHERE l.id = :id AND ls.id = :senderId AND l.hasReplied = true AND l.isStored = false AND l.isDeleteBySender = false")
+    Optional<Letter> findRepliedLetter(@Param("id") Long id,
+                                       @Param("senderId") Long senderId);
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.sender ls WHERE l.id = :id AND ls.id = :senderId")
-    Optional<Letter> findByIdAndSenderId(@Param("id") Long id,
-                                         @Param("senderId") Long senderId);
+    @Query("SELECT l FROM Letter l JOIN FETCH l.sender sr WHERE sr.id = :senderId AND l.hasReplied = true AND l.isStored = false AND l.isDeleteBySender = false")
+    List<Letter> findAllRepliedLetter(@Param("senderId") Long senderId);
 
     @Query("SELECT l FROM Letter l JOIN FETCH l.sender ls WHERE l.id = :id AND ls.id = :senderId AND l.isDeleteBySender = false")
-    Optional<Letter> findByIdAndSenderIdAndIsDeleteBySenderFalse(@Param("id") Long id,
-                                                                 @Param("senderId") Long senderId);
+    Optional<Letter> findSendLetter(@Param("id") Long id,
+                                    @Param("senderId") Long senderId);
 
     @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId")
     Optional<Letter> findByIdAndReceiverId(@Param("id") Long id,
                                            @Param("receiverId") Long receiverId);
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.sender ls WHERE l.id = :id AND ls.id = :senderId AND l.hasReplied = true "
-            + "AND l.isStored = false")
-    Optional<Letter> findByIdAndSenderIdAndHasRepliedTrueAndStoredFalse(@Param("id") Long id,
-                                                                        @Param("senderId") Long senderId);
 
     @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.isStored = false"
             + " AND l.letterType = 'Onboarding'")
@@ -44,9 +44,6 @@ public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQue
     Optional<Letter> findByIdAndSenderIdAndStoredTrue(@Param("id") Long id,
                                                       @Param("senderId") Long senderId);
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.hasReplied = false")
-    Optional<Letter> findByIdAndReceiverIdAndHasRepliedIsFalse(@Param("id") Long id,
-                                                               @Param("receiverId") Long receiverId);
 
     @Query("SELECT l FROM Letter l WHERE l.uuid = :uuid")
     List<Letter> findAllByUuid(@Param("uuid") String uuid);

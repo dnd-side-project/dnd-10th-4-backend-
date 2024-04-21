@@ -50,6 +50,12 @@ public class LetterController {
         return new ResponseEntity(HttpStatus.CREATED);
     }
 
+    @GetMapping("/send")
+    @AssignCurrentMemberId
+    public ResponseEntity<PagedSendLettersResponse> readSentLetters(@Valid LetterReadCondition cond) {
+        return new ResponseEntity(letterService.readSendLetters(cond), HttpStatus.OK);
+    }
+    
     @GetMapping("/send/{letterId}")
     @AssignCurrentMemberId
     public ResponseEntity<SendLetterResponse> readSentLetter(CurrentMemberIdRequest request,
@@ -65,11 +71,6 @@ public class LetterController {
         return new ResponseEntity(HttpStatus.OK);
     }
 
-    @GetMapping("/send")
-    @AssignCurrentMemberId
-    public ResponseEntity<PagedSendLettersResponse> readSentLetter(@Valid LetterReadCondition cond) {
-        return new ResponseEntity(letterService.readSendLetters(cond), HttpStatus.OK);
-    }
 
     @GetMapping("/reception/{letterId}")
     @AssignCurrentMemberId
