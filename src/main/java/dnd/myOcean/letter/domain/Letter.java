@@ -134,6 +134,10 @@ public class Letter extends BaseEntity {
         this.isDeleteBySender = true;
     }
 
+    public void deleteByReceiver() {
+        this.isDeleteByReceiver = true;
+    }
+
     public void reply(final String replyContent, final LetterImage replyletterImage) {
         this.replyContent = replyContent;
         this.hasReplied = true;
@@ -145,7 +149,7 @@ public class Letter extends BaseEntity {
         this.isStored = isStored;
 
         if (isStored == false) {
-            this.isDeleteByReceiver = true;
+            deleteByReceiver();
         }
     }
 

@@ -26,7 +26,6 @@ public class AuthController {
     public ResponseEntity<LoginResponse> loginKakao(@RequestParam(name = "code") String code)
             throws JsonProcessingException {
         LoginResponse loginResponse = authService.kakaoLogin(code);
-        System.out.println(loginResponse.getAccessToken());
         return new ResponseEntity(loginResponse, HttpStatus.OK);
     }
 

@@ -12,11 +12,11 @@ import org.springframework.data.repository.query.Param;
 
 public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQuerydslRepository {
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false")
+    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE l.id = :id AND lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false AND l.isDeleteByReceiver = false")
     Optional<Letter> findReceivedLetter(@Param("id") Long id,
                                         @Param("receiverId") Long receiverId);
 
-    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false")
+    @Query("SELECT l FROM Letter l JOIN FETCH l.receiver lr WHERE lr.id = :receiverId AND l.hasReplied = false AND l.isStored = false AND l.isDeleteByReceiver = false")
     List<Letter> findAllReceivedLetters(@Param("receiverId") Long receiverId);
 
     @Query("SELECT l FROM Letter l JOIN FETCH l.sender ls WHERE l.id = :id AND ls.id = :senderId AND l.hasReplied = true AND l.isStored = false AND l.isDeleteBySender = false")
@@ -48,6 +48,6 @@ public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQue
     List<Letter> findAllByUuid(@Param("uuid") String uuid);
 
     @Modifying
-    @Query("DELETE FROM Letter l WHERE l.createDate <= :expirationDate and l.hasReplied = false")
+    @Query("DELETE FROM Letter l WHERE l.createDate <= :expirationDate and l.hasReplied = false and l.letterType != 'Onboarding'")
     void deleteDiscardedLetters(@Param("expirationDate") LocalDateTime expirationDate);
 }
