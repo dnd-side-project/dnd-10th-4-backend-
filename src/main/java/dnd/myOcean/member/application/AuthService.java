@@ -79,7 +79,9 @@ public class AuthService {
             LetterImage letterImage = letterImageRepository.findOnboardingLetter()
                     .orElseThrow(LetterImageNotFoundException::new);
 
-            if (!letterRepository.existsOnboardingLetter(member.getId())) {
+            System.out.println(member.getId());
+            
+            if (member.getId() == null) {
                 letterRepository.save(
                         Letter.createOnboardingLetter(rootMember, member, letterImage, onboardingContent));
             }
