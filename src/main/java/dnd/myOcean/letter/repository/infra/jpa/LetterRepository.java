@@ -43,11 +43,13 @@ public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQue
     Optional<Letter> findStoredLetter(@Param("id") Long id,
                                       @Param("senderId") Long senderId);
 
-
     @Query("SELECT l FROM Letter l WHERE l.uuid = :uuid")
     List<Letter> findAllByUuid(@Param("uuid") String uuid);
 
     @Modifying
     @Query("DELETE FROM Letter l WHERE l.createDate <= :expirationDate and l.hasReplied = false and l.letterType != 'Onboarding'")
     void deleteDiscardedLetters(@Param("expirationDate") LocalDateTime expirationDate);
+
+    @Query("SELECT l FROM Letter l WHERE l.letterType = 'Onboarding' and l.receiver.id = : receiverId")
+    boolean existsOnboardingLetter(@Param("id") Long receiverId);
 }

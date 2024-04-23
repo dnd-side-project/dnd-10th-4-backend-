@@ -55,7 +55,7 @@ public class LetterController {
     public ResponseEntity<PagedSendLettersResponse> readSentLetters(@Valid LetterReadCondition cond) {
         return new ResponseEntity(letterService.readSendLetters(cond), HttpStatus.OK);
     }
-    
+
     @GetMapping("/send/{letterId}")
     @AssignCurrentMemberId
     public ResponseEntity<SendLetterResponse> readSentLetter(CurrentMemberIdRequest request,
@@ -70,7 +70,6 @@ public class LetterController {
         letterService.deleteSendLetter(request, letterId);
         return new ResponseEntity(HttpStatus.OK);
     }
-
 
     @GetMapping("/reception/{letterId}")
     @AssignCurrentMemberId

@@ -73,12 +73,16 @@ public class AuthService {
                 member.getRole().name());
 
         saveRefreshTokenOnRedis(member, tokenResponse);
-        
+
         if (member.isFirstLogin()) {
             Member rootMember = memberRepository.findRootUser().orElseThrow(MemberNotFoundException::new);
             LetterImage letterImage = letterImageRepository.findOnboardingLetter()
                     .orElseThrow(LetterImageNotFoundException::new);
-            letterRepository.save(Letter.createOnboardingLetter(rootMember, member, letterImage, onboardingContent));
+
+            if (!letterRepository.existsOnboardingLetter(member.getId())) {
+                letterRepository.save(
+                        Letter.createOnboardingLetter(rootMember, member, letterImage, onboardingContent));
+            }
 
             return LoginResponse.of(tokenResponse.getAccessToken(), tokenResponse.getRefreshToken(), true);
         }
