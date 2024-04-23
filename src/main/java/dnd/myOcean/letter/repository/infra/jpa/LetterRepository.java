@@ -50,6 +50,6 @@ public interface LetterRepository extends JpaRepository<Letter, Long>, LetterQue
     @Query("DELETE FROM Letter l WHERE l.createDate <= :expirationDate and l.hasReplied = false and l.letterType != 'Onboarding'")
     void deleteDiscardedLetters(@Param("expirationDate") LocalDateTime expirationDate);
 
-    @Query("SELECT l FROM Letter l WHERE l.letterType = 'Onboarding' and l.receiver.id = : receiverId")
+    @Query("SELECT l FROM Letter l WHERE l.letterType = 'Onboarding' and l.receiver.id = :receiverId")
     boolean existsOnboardingLetter(@Param("receiverId") Long receiverId);
 }
