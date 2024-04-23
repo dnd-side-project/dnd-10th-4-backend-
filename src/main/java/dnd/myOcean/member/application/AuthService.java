@@ -80,8 +80,8 @@ public class AuthService {
                     .orElseThrow(LetterImageNotFoundException::new);
 
             System.out.println(member.getId());
-            
-            if (member.getId() == null) {
+
+            if (!letterRepository.existsByLetterTypeAndReceiverId("Onboarding", member.getId())) {
                 letterRepository.save(
                         Letter.createOnboardingLetter(rootMember, member, letterImage, onboardingContent));
             }
